@@ -8,7 +8,7 @@ WORKDIR /app
 RUN npm install -g @vue/cli
 
 # 必要なポートを公開
-EXPOSE 8080
+EXPOSE 5173
 
 # シェルをデフォルトコマンドに設定
 CMD ["sh"]
