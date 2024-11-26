@@ -3,7 +3,7 @@
 docker compose up -d
 ```
 ### 各サービスのURL
-- WEB：http://localhost:5173
+- WEB：http://localhost:3000
 - API：http://localhost:8000
 - DB：localhost:3307
 
