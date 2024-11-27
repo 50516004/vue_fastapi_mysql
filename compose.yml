@@ -29,7 +29,7 @@ services:
       - DB_HOST=db
       - DB_PORT=3306
       - DB_USER=root
-      - DB_PASSWORD=example
+      - DB_PASSWORD=root
       - DB_NAME=mydb
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     depends_on:
@@ -41,7 +41,7 @@ services:
     ports:
       - 3307:3306
     environment:
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: mydb
       MYSQL_USER: user1
       MYSQL_PASSWORD: pass123

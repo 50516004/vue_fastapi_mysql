@@ -19,3 +19,7 @@ docker exec -it [コンテナ名] sh
 ```
 docker logs [コンテナ名]
 ```
+### SQLを実行
+```
+cmd /c "docker exec -i db mysql -u root -proot < ./sql/[SQLファイル]"
+```
