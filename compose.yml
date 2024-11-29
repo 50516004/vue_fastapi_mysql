@@ -1,51 +1,53 @@
 services:
+  # フロントエンドサービスの定義
   web:
-    container_name: web
+    container_name: web  # コンテナの名前を "web" に設定
     build:
-      context: ./web
-      dockerfile: Dockerfile
+      context: ./web  # Dockerfile をビルドするコンテキストとして ./web ディレクトリを指定
+      dockerfile: Dockerfile  # 使用する Dockerfile を指定
     ports:
-      - 3000:3000
-      - 3001:3001
+      - 3000:3000  # ホストのポート 3000 をコンテナのポート 3000 にバインド
+      - 3001:3001  # ホストのポート 3001 をコンテナのポート 3001 にバインド
     volumes:
-      - ./web/app:/app
-      - /app/node_modules
-    stdin_open: true
-    tty: true
-    command: sh -c "npm install && npm run dev"
+      - ./web/app:/app  # ローカルディレクトリ ./web/app をコンテナの /app にマウント
+      - /app/node_modules  # node_modules はマウントしない（空のボリュームを作成）
     depends_on:
-      - api
+      - api  # "api" サービスが起動した後にこのサービスを開始
 
+  # バックエンドAPIサービスの定義
   api:
-    container_name: api
+    container_name: api  # コンテナの名前を "api" に設定
     build:
-      context: ./api
-      dockerfile: Dockerfile
+      context: ./api  # Dockerfile をビルドするコンテキストとして ./api ディレクトリを指定
+      dockerfile: Dockerfile  # 使用する Dockerfile を指定
     volumes:
-      - ./api/app:/app
+      - ./api/app:/app  # ローカルディレクトリ ./api/app をコンテナの /app にマウント
+      - /app/__pycache__  # __pycache__はマウントしない（空のボリュームを作成）
     ports:
-      - 8000:8000
+      - 8000:8000  # ホストのポート 8000 をコンテナのポート 8000 にバインド
     environment:
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_USER=root
-      - DB_PASSWORD=root
-      - DB_NAME=mydb
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+      - DB_HOST=db  # データベースのホスト名を "db" に設定
+      - DB_PORT=3306  # データベースのポート番号を 3306 に設定
+      - DB_USER=root  # データベース接続ユーザー名を "root" に設定
+      - DB_PASSWORD=root  # データベース接続パスワードを "root" に設定
+      - DB_NAME=mydb  # 使用するデータベース名を "mydb" に設定
     depends_on:
-      - db
+      - db  # "db" サービスが起動した後にこのサービスを開始
 
+  # データベースサービスの定義
   db:
-    container_name: db
-    image: mysql:8
+    container_name: db  # コンテナの名前を "db" に設定
+    image: mysql:8  # MySQL 8.x の公式イメージを使用
     ports:
-      - 3307:3306
+      - 3307:3306  # ホストのポート 3307 をコンテナのポート 3306 にバインド
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mydb
-      MYSQL_USER: user1
-      MYSQL_PASSWORD: pass123
+      MYSQL_ROOT_PASSWORD: root  # MySQL の root ユーザーのパスワードを "root" に設定
+      MYSQL_DATABASE: mydb  # 初期作成されるデータベース名を "mydb" に設定
+      MYSQL_USER: user1  # 作成される追加ユーザー名を "user1" に設定
+      MYSQL_PASSWORD: pass123  # 追加ユーザー "user1" のパスワードを "pass123" に設定
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/var/lib/mysql  # データ永続化のためにローカルボリューム "db_data" を MySQL データディレクトリにマウント
+
+# ボリュームの定義（データベースデータの永続化用）
 volumes:
   db_data:
